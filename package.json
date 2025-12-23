@@ -1,0 +1,19 @@
+{
+  "name": "prompt-ai-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Your Name <your@email.com>",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google/genai": "^1.34.0"
+  }
+}
