@@ -26,16 +26,28 @@ async function getRequestBody(req) {
 }
 
 const server = http.createServer(async function (req, res) {
-  // === IMPORTANT: Add these CORS headers ===
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://your-frontend.netlify.app"
-  );
+  // CORS Configuration - Allow multiple origins
+  const allowedOrigins = [
+    "http://localhost:5173", // Vite dev server
+    "http://localhost:5500", // Live Server
+    "http://127.0.0.1:5500", // Live Server alternative
+    "https://my-ai-project.onrender.com", // Your deployed backend
+  ];
+
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  } else {
+    // For development, allow all; for production, restrict
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
+
   res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Content-Type", "text/plain");
 
-  // Handle OPTIONS request for CORS preflight
+  // Handle preflight OPTIONS request
   if (req.method === "OPTIONS") {
     res.writeHead(200);
     return res.end();
@@ -48,6 +60,11 @@ const server = http.createServer(async function (req, res) {
         const body = await getRequestBody(req);
         console.log("Body parsed:", body);
 
+        if (!body || !body.prompt) {
+          res.statusCode = 400;
+          return res.end("Error: Missing 'prompt' in request body");
+        }
+
         // Call Gemini AI
         const response = await ai.models.generateContent({
           model: "gemini-2.5-flash",
@@ -56,9 +73,16 @@ const server = http.createServer(async function (req, res) {
 
         return res.end(response.text);
       }
-      default: {
-        console.log("Non-POST request received");
+
+      case "GET": {
+        console.log("GET request received");
         return res.end("non-post request received");
+      }
+
+      default: {
+        console.log(`Unsupported method received: ${req.method}`);
+        res.statusCode = 405;
+        return res.end(`Method ${req.method} not allowed`);
       }
     }
   } catch (error) {
