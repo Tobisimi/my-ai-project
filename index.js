@@ -26,6 +26,7 @@ async function getRequestBody(req) {
 }
 
 const server = http.createServer(async function (req, res) {
+  console.log("📨 REQUEST RECEIVED:", req.method, req.url);
   // CORS Configuration - Allow multiple origins
   const allowedOrigins = [
     "http://localhost:5173", // Vite dev server
