@@ -94,5 +94,7 @@ const server = http.createServer(async function (req, res) {
 
 const port = Number(process.env.PORT) || 8000;
 server.listen(port, function () {
-  console.log(`server running on port ${port}`);
+  console.log(`✅ Server running on port ${port}`);
+  console.log(`✅ GEMINI_API_KEY exists: ${!!process.env.GEMINI_API_KEY}`);
+  console.log(`✅ NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
 });
