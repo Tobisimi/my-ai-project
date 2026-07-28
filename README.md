@@ -1,4 +1,4 @@
-# Speech-to-AI Web Application (Backend)
+# Bezaleel AI Backend
 
 ## Overview
 This is the backend server for the Speech-to-AI Web Application. It receives text prompts from the frontend, sends them to Google Gemini AI, and returns the AI-generated response.
